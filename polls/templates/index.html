@@ -1,0 +1,28 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>这里是root下面index页面</title>
+  </head>
+  <body>
+    Django, how are you!
+    <h1>Django, how are you!</h1>
+    <p>Pictures</p>
+    <li><a href="www.bing.com">游戏</a></li>
+    <li><a href="movie/">电影</a></li>
+    <li><a href="music/">音乐</a></li>
+    <img
+      src="{% static 'WIN_20231226_14_22_52_Pro.jpg' %}"
+      width="150"
+      height="112"
+      alt=""
+    />
+    <img
+      src="{% static 'IMG_20231021_191505.jpg' %}"
+      width="112"
+      height="150"
+      alt=""
+    />
+  </body>
+</html>
