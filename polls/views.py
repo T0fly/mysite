@@ -1,6 +1,8 @@
 # Create your views here.
 from glob import escape
 
+from django.db.models import Avg, Max
+from django.db.models.expressions import RawSQL
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.urls import reverse
@@ -120,4 +122,80 @@ def score_list(request):
     html = "学号 课程号 成绩<br>"
     for i in score:
         html += f"{i.stuno} {i.cno} {i.grade}<br>"
+    return HttpResponse(html)
+
+
+import math
+
+
+def aggr(request):
+    # 聚合函数aggregate使用
+    ds = scores.objects.aggregate(平均值=Avg("grade"), 最大值=Max("grade"))
+    html = "平均值：%s,\t 最大值：%s\n" % (ds["平均值"], ds["最大值"])
+    return HttpResponse(html)
+
+
+def ann(request):
+    # annotate使用
+    ds = scores.objects.values("cno").annotate(Avg("grade"), Max("grade"))
+    html = "课程号  平均成绩  最高分<br>"
+    for a in ds:
+        html = (
+            html
+            + a["cno"]
+            + "\t\t"
+            + str(a["grade__avg"])
+            + "\t\t"
+            + str(a["grade__max"])
+            + "<br>"
+        )
+    return HttpResponse(html)
+
+
+def rowsql(request):
+    # 原始SQL表达式
+    ds = scores.objects.all().annotate(
+        grade90=RawSQL("select count(*)from Scores where grade>=%s", (90,))
+    )
+    html = ""
+    for a in ds.order_by("-grade")[:3]:
+        html = html + "<br>编号：%s,学号：%s,成绩：%d\n" % (a.id, a.stuno, a.grade)
+    return HttpResponse(html)
+
+
+from polls.models import cards, stus3
+
+
+def oto(request):
+    x1 = stus3.objects.create(xm="李海")
+    c1 = cards.objects.create(no="0001", stu=x1)
+    x2 = stus3(xm="小红")
+    c2 = cards(no="0002", stu=x2)
+    x1.save()
+    x2.save()
+    c1.save()
+    c2.save()
+    ds1 = stus3.objects.all()
+    ds2 = cards.objects.all()
+    html = "学生信息<br/>"
+    for a in ds1:
+        html = html + "%s %s<br/>" % (a.id, a.xm)
+    html = html + "<br/>校园卡信息<br/>"
+    for a in ds2:
+        html = html + "%s %s %s<br/>" % (a.id, a.no, a.stu_id)
+    return HttpResponse(html)
+
+
+def stc(request):
+    # 访问关联对象（学生-校园卡）
+    # 正向查询，通过校园卡查学生
+    c1 = cards.objects.get(no="0001")
+    html = "持有该卡是：%s同学" % c1.stu.xm
+    return HttpResponse(html)
+
+
+def sstc(request):
+    # 反向查询（根据学生查学生持有的卡）
+    x1 = stus3.objects.get(xm="小红")
+    html = "该学生持有的卡是：" + x1.cards.no
     return HttpResponse(html)

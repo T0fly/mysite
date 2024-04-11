@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="configuration">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="system.webServer">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="handlers">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="clear" />
+                                        <xs:element name="add">
+                                            <xs:complexType>
+                                                <xs:attribute name="name" use="required" />
+                                                <xs:attribute name="path" use="required" />
+                                                <xs:attribute name="verb" use="required" />
+                                                <xs:attribute name="modules" use="required" />
+                                                <xs:attribute name="resourceType" use="required" />
+                                                <xs:attribute name="requireAccess" use="required" />
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

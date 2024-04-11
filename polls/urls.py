@@ -1,6 +1,6 @@
 from django.urls import path, re_path
 
-from . import views
+from . import dbop, views
 
 app_name = "polls"
 urlpatterns = [
@@ -19,4 +19,11 @@ urlpatterns = [
     path("cno/<cno>", views.cno_010),
     path("student_list/", views.student_list),
     path("score_list/", views.score_list),
+    path("aggr/", views.aggr),
+    path("ann/", views.ann),
+    path("rowsql/", views.rowsql),
+    path("ceshi/", dbop.ceshi),
+    path("oto/", views.oto),
+    path("stc/", views.stc),
+    path("sstc/", views.sstc),
 ]

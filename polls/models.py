@@ -32,6 +32,10 @@ class student(models.Model):
     sex = models.CharField(max_length=3)
     birthdate = models.DateField(blank=True)
 
+    class Meta:
+        indexes = [models.Index(fields=["sex"], name="sex")]  # 普通索引
+        unique_together = ("stuno", "name")  # 唯一索引
+
 
 class scores(models.Model):
     id = models.BigIntegerField(max_length=20, primary_key=True)
@@ -39,6 +43,20 @@ class scores(models.Model):
     cno = models.CharField(max_length=3)
     grade = models.SmallIntegerField(max_length=6)
 
+    class Meta:
+        db_table = "scores"
+        unique_together = ("stuno", "cno")
+
 
 # new_score = scores(id=12, stuno="112208020307", cno="010", grade=80)
 # new_score.save()
+
+
+# 一对一关系
+class stus3(models.Model):  # 学生模型3
+    xm = models.CharField(max_length=8)  # 学生姓名
+
+
+class cards(models.Model):  # 校园卡模型
+    no = models.CharField(max_length=8)  # 卡号
+    stu = models.OneToOneField(stus3, on_delete=models.CASCADE)

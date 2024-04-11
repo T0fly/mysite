@@ -8,7 +8,7 @@ def birth(request, y, m, d):
 
 
 def hello(request):
-    return HttpResponse("这是我的网页")
+    return HttpResponse("Django, how are you!")
 
 
 def runoob(request):
@@ -19,3 +19,8 @@ def runoob(request):
 
 def picture(request):
     return render(request, "index.html")
+
+
+def p(request):
+    html = 'This is a webpage, it has two pictures. <br/> <img src="/static/IMG_20231021_191505.jpg" width="112"height="150" alt=""/>'
+    return HttpResponse(html)

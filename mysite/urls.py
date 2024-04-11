@@ -24,8 +24,10 @@ urlpatterns = [
     re_path(r"^birthday/(?P<y>\d{1,4})/(?P<m>\d{1,2})/(?P<d>\d{1,2})/$", views.birth),
     path("", views.hello, name="hello"),
     path("polls/", include("polls.urls")),
+    path("stm/", include("stumanage.urls")),
     path("admin/", admin.site.urls),
     path("hello/", views.hello, name="hello"),
     path("runoob/", views.runoob),
     path("pic/", views.picture),
+    path("rp/", views.p),
 ]
