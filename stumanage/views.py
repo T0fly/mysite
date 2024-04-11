@@ -14,59 +14,65 @@ def home(request):
 def stu_show(request):
     return HttpResponse(
         "<h1>学生信息</h1>"
-        + "<li><a href='/stm/stu_detail'>浏览学生</a></li><br>"
-        + "<li><a href='/stm'>浏览学生班级</a></li><br>"
+        + "<li><a href='/stm/show_student'>浏览学生</a></li><br>"
+        + "<li><a href='/stm/show_class_of_student'>浏览学生班级</a></li><br>"
         + "<li><a href='/stm' style='color:blue'>返回主页</a></li>"
     )
-
-
-from polls.models import scores, student
-
-
-def stu_detail(request):
-    html = "<h1>stu_detail</h1>" + "<h1>学生信息</h1>"
-    students = student.objects.all()
-    html += "学号    姓名    性别<br>"
-    for i in students:
-        html += f"{i.stuno} {i.name} {i.sex}<br>"
-    html += "<a href='/stm/stu_show'>返回学生页面</a>"
-    return HttpResponse(html)
 
 
 def class_show(request):
     return HttpResponse(
         "<h1>班级信息</h1>"
-        + "<li><a href='/stm/class_detail'>浏览班级信息</a></li><br>"
-        + "<li><a href='/stm'>浏览班级学生信息</a></li><br>"
+        + "<li><a href='/stm/show_class'>浏览班级信息</a></li><br>"
+        + "<li><a href='/stm/show_student_of_class'>浏览班级学生信息</a></li><br>"
         + "<li><a href='/stm' style='color:blue'>返回主页</a></li>"
     )
 
 
-def class_detail(request):
-    html = "<h1>class_detail</h1>"
-    score = scores.objects.all()
-    html += "学号 课程号 成绩<br>"
-    for i in score:
-        html += f"{i.stuno} {i.cno} {i.grade}<br>"
+from stumanage.models import Class, Student
+
+
+# 一对多关系
+def addclass(request):
+    Class1 = Class(class_name="软件1211")
+    Class1.save()
+    student1 = Student(student_name="张三", Class=Class1)
+    student1.save()
+    return HttpResponse("添加班级成功")
+
+
+def show_student(request):
+    students = Student.objects.all()
+    html = "<h1>学生信息</h1>学号 姓名<br>"
+    for student in students:
+        html += f"{student.id} {student.student_name} <br>"
+    html += "<a href='/stm/stu_show'>返回学生页面</a>"
     return HttpResponse(html)
 
 
-def index(request):
-    return render(request, "index.html", {"articles": 18})
+def show_class_of_student(request):
+    students = Student.objects.all()
+    html = "<h1>学生信息</h1>学号 姓名 班级号 班级名<br>"
+    for student in students:
+        html += f"{student.id} {student.student_name} {student.Class.id} {student.Class.class_name}<br>"
+    html += "<a href='/stm/stu_show'>返回学生页面</a>"
+    return HttpResponse(html)
 
 
-def login(request):
-    return HttpResponse("注册页面")
+def show_class(request):
+    classes = Class.objects.all()
+    html = "<h1>班级信息</h1>班级号 班级名<br>"
+    for c in classes:
+        html += f"{c.id} {c.class_name} <br>"
+    html += "<a href='/stm/class_show'>返回班级页面</a>"
+    return HttpResponse(html)
 
 
-def book(request):
-    return HttpResponse("读书页面")
-
-
-def movie(request):
-    return HttpResponse("电影页面")
-
-
-def book_detail(request, book_id, catgray):
-    text = "文章详情页,该文章ID是：%s，分类是：%s" % (book_id, catgray)
-    return HttpResponse(text)
+def show_student_of_class(request):
+    classes = Class.objects.all()
+    html = "<h1>班级学生</h1>班级号 班级名 学号 姓名<br>"
+    for c in classes:
+        for student in c.student_set.all():
+            html += f"{c.id} {c.class_name} {student.id} {student.student_name}<br>"
+    html += "<a href='/stm/class_show'>返回班级页面</a>"
+    return HttpResponse(html)

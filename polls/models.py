@@ -38,10 +38,10 @@ class student(models.Model):
 
 
 class scores(models.Model):
-    id = models.BigIntegerField(max_length=20, primary_key=True)
+    id = models.BigIntegerField(primary_key=True)
     stuno = models.CharField(max_length=12)
     cno = models.CharField(max_length=3)
-    grade = models.SmallIntegerField(max_length=6)
+    grade = models.SmallIntegerField()
 
     class Meta:
         db_table = "scores"

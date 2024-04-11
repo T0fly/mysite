@@ -125,9 +125,6 @@ def score_list(request):
     return HttpResponse(html)
 
 
-import math
-
-
 def aggr(request):
     # 聚合函数aggregate使用
     ds = scores.objects.aggregate(平均值=Avg("grade"), 最大值=Max("grade"))
