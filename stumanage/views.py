@@ -1,23 +1,31 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
+from django.urls import reverse
 
 
 # Create your views here.
 def home(request):
     return HttpResponse(
-        "<h1>Django, how are you? <br> Welcome to the stumanager home page!</h1><h2>Menu</h2>"
-        + "<a href='stu_show/'>学生信息</a>&nbsp&nbsp&nbsp&nbsp"
+        "<h1>Django, how are you? </h1><h2>Welcome to the Student Manage system home page!<br>Menu</h2>"
+        + "<a href='"
+        + reverse("stumanager:stu_show")
+        + "'>学生信息</a>&nbsp&nbsp&nbsp&nbsp"
         + "<a href='class_show/'>班级信息</a>"
     )
 
 
 def stu_show(request):
-    return HttpResponse(
+    # 使用 reverse() 函数生成名为 'stu_show' 的 URL
+    show_student_url = reverse("stumanager:show_student")
+    # 这里的 stumanager 是你在 urls.py 文件中指定的应用程序命名空间。
+    # 在 HTML 中嵌入动态生成的链接
+    html = (
         "<h1>学生信息</h1>"
-        + "<li><a href='/stm/show_student'>浏览学生</a></li><br>"
+        + f"<li><a href='{show_student_url}' style='color:green'>浏览学生</a></li><br>"
         + "<li><a href='/stm/show_class_of_student'>浏览学生班级</a></li><br>"
         + "<li><a href='/stm' style='color:blue'>返回主页</a></li>"
     )
+    return HttpResponse(html)
 
 
 def class_show(request):
@@ -38,6 +46,17 @@ def addclass(request):
     Class1.save()
     student1 = Student(student_name="张三", Class=Class1)
     student1.save()
+
+    Class2 = Class(class_name="软件1212")
+    Class2.save()
+    student2 = Student(student_name="李四", Class=Class2)
+    student2.save()
+
+    Class3 = Class(class_name="软件1213")
+    Class3.save()
+    student3 = Student(student_name="王五", Class=Class3)
+    student3.save()
+
     return HttpResponse("添加班级成功")
 
 
